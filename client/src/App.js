@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-
-import { BrowserRouter } from "react-router-dom/";
+import Film from "./Filmler/Film";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 import KaydedilenlerListesi from "./Filmler/KaydedilenlerListesi";
+import FilmListesi from "./Filmler/FilmListesi";
 
 export default function App() {
   const [saved, setSaved] = useState([]); // Stretch: the ids of "saved" movies
@@ -15,6 +16,7 @@ export default function App() {
         .get("http://localhost:5001/api/filmler") // Burayı Postman'le çalışın
         .then((response) => {
           setMovieList(response.data);
+          setSaved(response.data);
           console.log(response);
 
           // Perform any operations or transformations on each item.
@@ -34,23 +36,18 @@ export default function App() {
   };
 
   return (
-    <div>
-      <KaydedilenlerListesi
-        list={
-          [
-            /* Burası esnek */
-          ]
-        }
-      />
-      <ul>
-        {movieList.map((item) => (
-          <li key={item.id}>
-            {item.title} {item.id}
-          </li>
-        ))}
-      </ul>
-
-      <div>Bu Div'i kendi Routelarınızla değiştirin</div>
-    </div>
+    <Router>
+      <div>
+        <KaydedilenlerListesi list={[saved]} />
+        <Switch>
+          <Route path="/" exact>
+            <FilmListesi movies={movieList} />
+          </Route>
+          <Route path="/filmler/:id">
+            <Film movie={movieList.id} />
+          </Route>
+        </Switch>
+      </div>
+    </Router>
   );
 }
