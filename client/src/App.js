@@ -46,6 +46,9 @@ export default function App() {
           <Route path="/filmler/:id">
             <Film movie={movieList.id} />
           </Route>
+          <Route path="/filmler">
+            <FilmListesi movies={movieList} />
+          </Route>
         </Switch>
       </div>
     </Router>
